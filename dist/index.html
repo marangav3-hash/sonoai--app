@@ -1,37 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>sonoai-app</title>
-    <!-- The `react-native-web` recommended style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
-    <style id="expo-reset">
-      /* These styles make the body full-height */
-      html,
-      body {
-        height: 100%;
-      }
-      /* These styles disable body scrolling if you are using <ScrollView> */
-      body {
-        overflow: hidden;
-      }
-      /* These styles make the root element full-height */
-      #root {
-        display: flex;
-        height: 100%;
-        flex: 1;
-      }
-    </style>
-  <link rel="icon" href="/favicon.ico" /></head>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SonoAI</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+body{background:#085041;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+.card{background:rgba(255,255,255,0.07);border-radius:16px;padding:28px;width:100%;max-width:360px}
+.logo{text-align:center;margin-bottom:36px}
+.logo-circle{width:72px;height:72px;border-radius:36px;background:#1D9E75;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#E1F5EE;font-weight:700}
+.logo-title{font-size:40px;font-weight:700;color:#E1F5EE;letter-spacing:-1px}
+.logo-title span{color:#5DCAA5;font-weight:300}
+.logo-sub{font-size:11px;color:#5DCAA5;letter-spacing:3px;margin-top:4px}
+label{display:block;color:#9FE1CB;font-size:12px;font-weight:600;margin-bottom:6px;margin-top:14px}
+input{width:100%;background:rgba(255,255,255,0.1);border:1px solid #1D9E75;border-radius:10px;padding:11px 14px;color:#E1F5EE;font-size:15px;outline:none}
+input::placeholder{color:#5DCAA5}
+.btn{width:100%;background:#1D9E75;color:#fff;border:none;border-radius:10px;padding:14px;font-size:16px;font-weight:700;margin-top:22px;cursor:pointer}
+.btn:hover{background:#0F6E56}
+.footer{color:#5DCAA5;font-size:11px;text-align:center;margin-top:24px;opacity:0.7}
+.screen{display:none;width:100%;max-width:420px}
+.screen.active{display:block}
+.topbar{background:#085041;padding:14px 20px;display:flex;align-items:center;gap:8px;border-radius:12px 12px 0 0}
+.topbar-dot{width:8px;height:8px;border-radius:50%;background:#1D9E75}
+.topbar-text{color:#E1F5EE;font-size:13px;font-weight:600;flex:1}
+.topbar-sub{color:#5DCAA5;font-size:12px}
+.content{background:#F7F7F5;padding:20px;border-radius:0 0 12px 12px}
+.section-title{font-size:10px;font-weight:700;color:#888;letter-spacing:2px;margin-bottom:10px;margin-top:16px}
+.action-card{background:#085041;border-radius:12px;padding:16px;display:flex;align-items:center;gap:14px;margin-bottom:8px;cursor:pointer}
+.action-card:hover{background:#0F6E56}
+.action-card-icon{width:42px;height:42px;border-radius:21px;background:#1D9E75;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;font-weight:300;flex-shrink:0}
+.action-card-title{font-size:15px;font-weight:700;color:#E1F5EE}
+.action-card-sub{font-size:12px;color:#9FE1CB;margin-top:2px}
+.action-card-2{background:#fff;border:0.5px solid #ddd}
+.action-card-2 .action-card-icon{background:#E1F5EE;color:#085041}
+.action-card-2 .action-card-title{color:#111}
+.action-card-2 .action-card-sub{color:#555}
+.ga-card{background:#085041;border-radius:14px;padding:22px;text-align:center;margin-bottom:16px}
+.ga-label{font-size:10px;font-weight:700;color:#9FE1CB;letter-spacing:2px;margin-bottom:6px}
+.ga-value{font-size:44px;font-weight:700;color:#E1F5EE}
+.ga-conf{font-size:12px;color:#5DCAA5;margin-top:4px}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.metric{background:#fff;border-radius:10px;padding:14px;border:0.5px solid #eee}
+.metric.hi{background:#E1F5EE;border-color:#5DCAA5}
+.metric-label{font-size:10px;font-weight:700;color:#888;letter-spacing:1px;margin-bottom:4px}
+.metric-value{font-size:26px;font-weight:700;color:#111}
+.metric.hi .metric-value{color:#085041}
+.metric-unit{font-size:13px;font-weight:400;color:#555}
+.disclaimer{background:#fff;border-radius:10px;padding:12px;border:0.5px solid #eee;font-size:12px;color:#888;line-height:1.6;margin-bottom:12px}
+.green-btn{background:#1D9E75;color:#fff;border:none;border-radius:12px;padding:14px;width:100%;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px}
+.green-btn:hover{background:#0F6E56}
+.emergency{background:#FCEBEB;border-bottom:2px solid #E24B4A;padding:12px 16px;display:flex;align-items:flex-start;gap:10px;margin-bottom:0;border-radius:0}
+.emergency-icon{font-size:22px;color:#791F1F;font-weight:700}
+.emergency-title{font-size:13px;font-weight:700;color:#791F1F}
+.emergency-reason{font-size:11px;color:#791F1F;margin-top:2px}
+</style>
+</head>
+<body>
 
-  <body>
-    <!-- Use static rendering with Expo Router to support running without JavaScript. -->
-    <noscript>
-      You need to enable JavaScript to run this app.
-    </noscript>
-    <!-- The root element for your Expo app. -->
-    <div id="root"></div>
-  <script src="/_expo/static/js/web/index-54f9a5ec5be88836864690631e08557e.js" defer></script>
+<!-- LOGIN -->
+<div id="login" class="screen active">
+  <div class="logo">
+    <div class="logo-circle">~⌇~</div>
+    <div class="logo-title">Sono<span>AI</span></div>
+    <div class="logo-sub">ULTRASOUND INTELLIGENCE</div>
+  </div>
+  <div class="card">
+    <label>EMAIL</label>
+    <input type="email" id="email" placeholder="sonographer@hospital.ke" />
+    <label>PASSWORD</label>
+    <input type="password" id="password" placeholder="........" />
+    <button class="btn" onclick="doLogin()">Sign in</button>
+  </div>
+  <div class="footer">SonoAI v1.0  •  For authorised clinical use only</div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="screen">
+  <div style="width:100%;max-width:420px">
+    <div class="topbar">
+      <div class="topbar-dot"></div>
+      <div class="topbar-text">System online</div>
+      <div class="topbar-sub">Models: untrained</div>
+    </div>
+    <div class="content">
+      <div class="section-title">QUICK ACTIONS</div>
+      <div class="action-card" onclick="showScreen('scan')">
+        <div class="action-card-icon">+</div>
+        <div>
+          <div class="action-card-title">New scan</div>
+          <div class="action-card-sub">Upload DICOM for AI analysis</div>
+        </div>
+      </div>
+      <div class="action-card action-card-2" onclick="showScreen('history')">
+        <div class="action-card-icon">=</div>
+        <div>
+          <div class="action-card-title">Scan history</div>
+          <div class="action-card-sub">View all previous scans</div>
+        </div>
+      </div>
+      <div class="section-title">RECENT SCANS</div>
+      <div style="background:#fff;border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px;margin-bottom:6px;border:0.5px solid #eee;cursor:pointer" onclick="showScreen('result')">
+        <div style="width:7px;height:7px;border-radius:50%;background:#1D9E75"></div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:#111">B-mode — OB-biometry</div><div style="font-size:11px;color:#888;margin-top:2px">Today, 14:32</div></div>
+        <span style="color:#ccc">›</span>
+      </div>
+      <div style="background:#fff;border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px;border:0.5px solid #eee;cursor:pointer" onclick="showScreen('result')">
+        <div style="width:7px;height:7px;border-radius:50%;background:#EF9F27"></div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:#111">B-mode — Emergency triage</div><div style="font-size:11px;color:#888;margin-top:2px">Today, 11:15</div></div>
+        <div style="background:#FCEBEB;border-radius:4px;padding:2px 6px;font-size:9px;font-weight:700;color:#791F1F;margin-right:4px">URGENT</div>
+        <span style="color:#ccc">›</span>
+      </div>
+      <button class="green-btn" style="background:transparent;color:#888;border:none;margin-top:16px" onclick="showScreen('login')">Sign out</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCAN -->
+<div id="scan" class="screen">
+  <div style="width:100%;max-width:420px">
+    <div class="topbar" style="cursor:pointer" onclick="showScreen('dashboard')">
+      <span style="color:#E1F5EE;font-size:18px">‹</span>
+      <div class="topbar-text" style="margin-left:8px">New Scan</div>
+    </div>
+    <div class="content">
+      <div class="section-title">DICOM FILE</div>
+      <div style="background:#fff;border-radius:14px;border:2px dashed #1D9E75;padding:28px;text-align:center;cursor:pointer" onclick="document.getElementById('fileInput').click()">
+        <div id="fileLabel" style="font-size:28px;color:#1D9E75">+</div>
+        <div id="fileText" style="font-size:13px;font-weight:600;color:#085041;margin-top:6px">Tap to select DICOM file</div>
+        <div style="font-size:11px;color:#888;margin-top:2px">.dcm files only</div>
+      </div>
+      <input type="file" id="fileInput" accept=".dcm" style="display:none" onchange="fileSelected(this)">
+      <div class="section-title">SCAN MODE</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="chip active" onclick="selectChip(this,'mode')">B-mode</button>
+        <button class="chip" onclick="selectChip(this,'mode')">M-mode</button>
+        <button class="chip" onclick="selectChip(this,'mode')">Doppler</button>
+      </div>
+      <div class="section-title">INDICATION</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="chip active" onclick="selectChip(this,'ind')">OB-biometry</button>
+        <button class="chip" onclick="selectChip(this,'ind')">POCUS</button>
+        <button class="chip" onclick="selectChip(this,'ind')">Emergency triage</button>
+      </div>
+      <div style="background:#E1F5EE;border-radius:8px;padding:10px;margin-top:16px;font-size:12px;color:#085041;line-height:1.5">Patient data is anonymised immediately on upload.</div>
+      <button id="runBtn" class="green-btn" style="opacity:0.4;margin-top:16px" onclick="runAnalysis()" disabled>Run AI analysis</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div id="result" class="screen">
+  <div style="width:100%;max-width:420px">
+    <div class="topbar" style="cursor:pointer" onclick="showScreen('dashboard')">
+      <span style="color:#E1F5EE;font-size:18px">‹</span>
+      <div class="topbar-text" style="margin-left:8px">AI Results</div>
+    </div>
+    <div class="emergency">
+      <div class="emergency-icon">!</div>
+      <div>
+        <div class="emergency-title">URGENT — Clinical review required</div>
+        <div class="emergency-reason">Flagged for clinical review — Confidence: 87%</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="ga-card">
+        <div class="ga-label">GESTATIONAL AGE</div>
+        <div class="ga-value">28w 3d</div>
+        <div class="ga-conf">Model confidence: 85%</div>
+      </div>
+      <div class="section-title">FETAL BIOMETRY</div>
+      <div class="metrics">
+        <div class="metric hi"><div class="metric-label">BPD</div><div class="metric-value">71.2<span class="metric-unit"> mm</span></div></div>
+        <div class="metric hi"><div class="metric-label">HC</div><div class="metric-value">262<span class="metric-unit"> mm</span></div></div>
+        <div class="metric"><div class="metric-label">AC</div><div class="metric-value">241<span class="metric-unit"> mm</span></div></div>
+        <div class="metric"><div class="metric-label">Femur</div><div class="metric-value">53.1<span class="metric-unit"> mm</span></div></div>
+      </div>
+      <div class="disclaimer">SonoAI results are decision support only. All clinical decisions must be made by a qualified clinician.</div>
+      <button class="green-btn" onclick="showScreen('scan')">New scan</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.chip{padding:7px 13px;border-radius:999px;border:0.5px solid #ddd;background:#fff;font-size:12px;color:#555;cursor:pointer}
+.chip.active{background:#085041;border-color:#085041;color:#fff;font-weight:600}
+</style>
+
+<script>
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function doLogin() {
+  const e = document.getElementById('email').value;
+  const p = document.getElementById('password').value;
+  if (!e || !p) { alert('Please enter email and password'); return; }
+  showScreen('dashboard');
+}
+function fileSelected(input) {
+  if (input.files[0]) {
+    document.getElementById('fileLabel').textContent = '✓';
+    document.getElementById('fileText').textContent = input.files[0].name;
+    document.getElementById('runBtn').style.opacity = '1';
+    document.getElementById('runBtn').disabled = false;
+  }
+}
+function selectChip(btn, group) {
+  btn.closest('div').querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+}
+function runAnalysis() {
+  document.getElementById('runBtn').textContent = 'Running AI inference...';
+  document.getElementById('runBtn').disabled = true;
+  setTimeout(() => showScreen('result'), 2000);
+}
+</script>
 </body>
 </html>
